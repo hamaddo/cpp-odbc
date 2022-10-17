@@ -51,9 +51,9 @@ bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
             case (4): {
                 clients_instance.create({
                                                 .registry_number = 11,
-                                                .full_name = reinterpret_cast<const wchar_t *> ("мужик"),
-                                                .address = reinterpret_cast<const wchar_t *>("тестовый"),
-                                                .gender = reinterpret_cast<const wchar_t *>("мужик"),
+                                                .full_name = L"мужик",
+                                                .address = L"тестовый",
+                                                .gender = L"мужик",
                                                 .receipt_number = 2,
                                         });
 

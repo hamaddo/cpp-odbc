@@ -20,3 +20,7 @@ insert into accounts(deposit_id, client_id, opening_date, closing_date)
 values
     (1, 2, '2022-01-05', '2022-06-05'),
     (4, 2, '2022-10-23', '2023-10-23');
+
+insert into accounts(registry_number, full_name, address, gender, receipt_number)
+values
+    (11,'мужик','тестовый','мужик',2)

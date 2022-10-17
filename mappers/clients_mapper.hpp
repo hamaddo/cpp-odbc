@@ -26,18 +26,19 @@ public:
 
     clients create(const clients &client_) {
         std::wstringstream query_builder;
-
         query_builder <<
-                      "insert into accounts(registry_number, full_name, address, gender, receipt_number)" << std::endl
+                      "insert into clients(registry_number, full_name, address, gender, receipt_number)" << std::endl
                       <<
                       "values" << std::endl << '(' <<
-                      '\'' << client_.full_name << '\'' << ',' <<
                       client_.registry_number << ',' <<
+                      '\'' << client_.full_name << '\'' << ',' <<
                       '\'' << client_.address << '\'' << ',' <<
                       '\'' << client_.gender << '\'' << ',' <<
                       client_.receipt_number <<
                       ')' << std::endl <<
                       "returning id";
+
+        std::wcout << query_builder.str() << std::endl;
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
@@ -46,6 +47,9 @@ public:
         auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 0, nullptr);
 
         retcode = SQLFetch(statement);
+
+
+        std::wcout << id << std::endl;
 
         auto new_account = client_;
         new_account.id = id;
@@ -62,7 +66,7 @@ public:
         std::stringstream query_builder;
 
         query_builder <<
-                      "select * from accounts" << std::endl <<
+                      "select * from clients" << std::endl <<
                       "where id = " << id_;
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
@@ -78,7 +82,7 @@ public:
         std::wstringstream query_builder;
 
         query_builder <<
-                      "update accounts" << std::endl <<
+                      "update clients" << std::endl <<
                       "set " <<
                       "where id = " << client_.id.value() << std::endl <<
                       "returning *";
@@ -93,7 +97,7 @@ public:
         std::stringstream query_builder;
 
         query_builder <<
-                      "delete from accounts" << std::endl <<
+                      "delete from clients" << std::endl <<
                       "where id = " << id_ << std::endl <<
                       "returning *";
 
