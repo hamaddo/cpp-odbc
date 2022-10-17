@@ -1,10 +1,10 @@
 #include <fcntl.h>
 #include "sql_executor.hpp"
-#include "mappers/client_mapper.hpp"
+#include "mappers/employer_mapper.hpp"
 #include "mappers/deposit_mapper.hpp"
 #include "mappers/clients_mapper.hpp"
 
-bool menu(deposit_mapper &deposit_instance, client_mapper &client_instance,
+bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
           clients_mapper &clients_instance) {
     auto should_break = false;
 
@@ -48,6 +48,17 @@ bool menu(deposit_mapper &deposit_instance, client_mapper &client_instance,
 
                 break;
             }
+            case (4): {
+                clients_instance.create({
+                                                .registry_number = 11,
+                                                .full_name = reinterpret_cast<const wchar_t *> ("мужик"),
+                                                .address = reinterpret_cast<const wchar_t *>("тестовый"),
+                                                .gender = reinterpret_cast<const wchar_t *>("мужик"),
+                                                .receipt_number = 2,
+                                        });
+
+                break;
+            }
         }
     }
 
@@ -71,10 +82,10 @@ int main(int argc, char **argv) {
         auto executor = sql_executor(connection_data);
 
         auto deposit_mapper_instance = deposit_mapper(&executor);
-        auto client_mapper_instance = client_mapper(&executor);
         auto clients_mapper_instance = clients_mapper(&executor);
+        auto employer_mapper_instance = employer_mapper(&executor);
 
-        menu(deposit_mapper_instance, client_mapper_instance, clients_mapper_instance);
+        menu(deposit_mapper_instance, employer_mapper_instance, clients_mapper_instance);
     }
         /* Connection catch */
     catch (const std::exception &ex) {

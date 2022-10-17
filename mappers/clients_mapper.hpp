@@ -55,7 +55,7 @@ public:
     clients read() {
         SQLHSTMT statement = executor_->execute("select * from accounts");
 
-        this->get_table(statement);
+        return this->get_table(statement);
     }
 
     clients read(int id_) {
@@ -67,7 +67,7 @@ public:
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
-        this->get_table(statement);
+        return this->get_table(statement);
     }
 
     clients update(const clients &client_) {
@@ -86,7 +86,7 @@ public:
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
 
-        this->get_table(statement);
+        return this->get_table(statement);
     }
 
     clients remove(int id_) {
@@ -99,7 +99,7 @@ public:
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
-        this->get_table(statement);
+        return this->get_table(statement);
     }
 
 private:
