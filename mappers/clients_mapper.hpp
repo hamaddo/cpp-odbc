@@ -109,6 +109,7 @@ public:
 private:
     sql_executor *executor_;
 
+    // todo array return handle
     clients get_table(SQLHSTMT statement) {
         SQLINTEGER id;
         SQLINTEGER registry_number;

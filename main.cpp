@@ -44,8 +44,17 @@ bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
                 break;
             }
             case (1): {
-                clients_instance.read();
+                auto result = clients_instance.read();
+                std::wcout << result << std::endl;
 
+                break;
+            }
+            case (2): {
+                int choice_id = -1;
+                std::wcout << L"--- Введите индентификатор ---" << std::endl;
+                std::cin >> choice_id;
+                auto result = clients_instance.read(choice_id);
+                std::wcout << result << std::endl;
                 break;
             }
             case (4): {
