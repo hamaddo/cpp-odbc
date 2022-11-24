@@ -1,6 +1,7 @@
 #ifndef DATABASE_PROGRAMMING_1_CLIENTS_MAPPER_HPP
 #define DATABASE_PROGRAMMING_1_CLIENTS_MAPPER_HPP
 
+#include <vector>
 #include "sql_executor.hpp"
 #include "entities/clients.hpp"
 
@@ -17,24 +18,24 @@ public:
                 "    full_name   varchar(255) not null,\n"
                 "    address    varchar(255) not null,\n"
                 "    gender   varchar(255) not null,\n"
-                "    receipt_number   integer not null\n"
+                "    phone   varchar(255) not null\n"
                 ")";
 
         SQLHSTMT statement = executor_->execute(query);
         auto retcode = SQLFetch(statement);
     };
 
-    clients create(const clients &client_) {
+    void create(Client &client_) {
         std::wstringstream query_builder;
         query_builder <<
-                      "insert into clients(registry_number, full_name, address, gender, receipt_number)" << std::endl
+                      "insert into clients(registry_number, full_name, address, gender, phone)" << std::endl
                       <<
                       "values" << std::endl << '(' <<
-                      client_.registry_number << ',' <<
-                      '\'' << client_.full_name << '\'' << ',' <<
-                      '\'' << client_.address << '\'' << ',' <<
-                      '\'' << client_.gender << '\'' << ',' <<
-                      client_.receipt_number <<
+                      client_.getRegistryNumber() << ',' <<
+                      '\'' << client_.getFullName() << '\'' << ',' <<
+                      '\'' << client_.getAddress() << '\'' << ',' <<
+                      '\'' << client_.getGender() << '\'' << ',' <<
+                      '\'' << client_.getPhone() << '\'' <<
                       ')' << std::endl <<
                       "returning id";
 
@@ -51,18 +52,10 @@ public:
 
         std::wcout << id << std::endl;
 
-        auto new_account = client_;
-        new_account.id = id;
-        return new_account;
+        client_.setClientId(id);
     }
 
-    clients read() {
-        SQLHSTMT statement = executor_->execute("select * from accounts");
-
-        return this->get_table(statement);
-    }
-
-    clients read(int id_) {
+    std::vector<Client> read(int id_) {
         std::stringstream query_builder;
 
         query_builder <<
@@ -74,8 +67,14 @@ public:
         return this->get_table(statement);
     }
 
-    clients update(const clients &client_) {
-        if (!client_.id.has_value()) {
+    std::vector<Client> readAll() {
+        SQLHSTMT statement = executor_->execute("select * from clients");
+
+        return this->get_table(statement);
+    }
+
+    void update(const Client &client_) {
+        if (!client_.getClientId().has_value()) {
             throw std::runtime_error("[clients_mapper]: record doesn't exists");
         }
 
@@ -84,16 +83,13 @@ public:
         query_builder <<
                       "update clients" << std::endl <<
                       "set " <<
-                      "where id = " << client_.id.value() << std::endl <<
+                      "where id = " << client_.getClientId().value() << std::endl <<
                       "returning *";
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
-
-
-        return this->get_table(statement);
     }
 
-    clients remove(int id_) {
+    void remove(int id_) {
         std::stringstream query_builder;
 
         query_builder <<
@@ -102,42 +98,51 @@ public:
                       "returning *";
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
-
-        return this->get_table(statement);
     }
 
 private:
     sql_executor *executor_;
 
-    // todo array return handle
-    clients get_table(SQLHSTMT statement) {
+    std::vector<Client> get_table(SQLHSTMT statement) {
+        std::vector<Client> buff;
+
         SQLINTEGER id;
         SQLINTEGER registry_number;
         SQLWCHAR full_name[255];
         SQLWCHAR address[255];
         SQLWCHAR gender[255];
-
-        SQLINTEGER receipt_number;
+        SQLWCHAR phone[255];
 
         auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 0, nullptr);
         retcode = SQLBindCol(statement, 2, SQL_C_LONG, &registry_number, 0, nullptr);
         retcode = SQLBindCol(statement, 3, SQL_C_WCHAR, &address, 255, nullptr);
         retcode = SQLBindCol(statement, 4, SQL_C_WCHAR, &full_name, 255, nullptr);
         retcode = SQLBindCol(statement, 5, SQL_C_WCHAR, &gender, 255, nullptr);
-        retcode = SQLBindCol(statement, 6, SQL_C_LONG, &receipt_number, 0, nullptr);
+        retcode = SQLBindCol(statement, 6, SQL_C_LONG, &phone, 0, nullptr);
 
-        retcode = SQLFetch(statement);
 
-        clients fetched = {
-                .id = id,
-                .registry_number = registry_number,
-                .full_name = full_name,
-                .address = address,
-                .gender = gender,
-                .receipt_number = receipt_number,
-        };
+        while (true) {
+            retcode = SQLFetch(statement);
+            if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+                Client client;
+                client.setClientId(id);
+                client.setRegistryNumber(registry_number);
+                client.setFullName(full_name);
+                client.setAddress(address);
+                client.setGender(gender);
+                client.setPhone(phone);
 
-        return fetched;
+                buff.push_back(client);
+            } else {
+                if (retcode == SQL_NO_DATA) {
+                    break;
+                }
+            }
+
+        }
+
+
+        return buff;
     }
 };
 

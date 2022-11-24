@@ -2,11 +2,11 @@
 CREATE TABLE clients
 (
     id              serial PRIMARY KEY,
-    registry_number numeric     NOT NULL,
+    registry_number numeric      NOT NULL,
     full_name       varchar(255) NOT NULL,
     address         varchar(255) NOT NULL,
     gender          varchar(255) NOT NULL,
-    receipt_number  serial      NOT NULL
+    phone           varchar(255) NOT NULL,
 );
 
 /*заявки*/
@@ -15,9 +15,9 @@ CREATE TABLE requests
     id            serial PRIMARY KEY,
     position_name varchar(255) not null,
     address       varchar(255) NOT NULL,
-    salary        numeric     not null,
+    salary        numeric      not null,
     city_district varchar(255) not null,
-    client_id     serial      not null,
+    client_id     serial       not null,
 
     FOREIGN KEY (client_id) REFERENCES clients (id)
 );
@@ -25,7 +25,7 @@ CREATE TABLE requests
 /*Работодатели*/
 CREATE TABLE employers
 (
-    id                           serial      NOT NULL PRIMARY KEY,
+    id                           serial       NOT NULL PRIMARY KEY,
     company_name                 varchar(255) NOT NULL,
     /* организационно правовая форма */
     olf                          varchar(255) NOT NULL,

@@ -1,10 +1,10 @@
 #include <fcntl.h>
 #include "sql_executor.hpp"
 #include "mappers/employer_mapper.hpp"
-#include "mappers/deposit_mapper.hpp"
 #include "mappers/clients_mapper.hpp"
 
-bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
+
+bool menu(employer_mapper &employer_instance,
           clients_mapper &clients_instance) {
     auto should_break = false;
 
@@ -25,13 +25,6 @@ bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
                    << L"9. Создать клиента" << std::endl
                    << L"10. Удалить клиента" << std::endl << std::endl;
 
-        std::wcout << L"--- Вклады ---" << std::endl
-                   << L"11. Показать все вклады" << std::endl
-                   << L"12. Найти вклад по индентификатору" << std::endl
-                   << L"13. Изменить данные вклада" << std::endl
-                   << L"14. Создать вклад" << std::endl
-                   << L"15. Удалить вклад" << std::endl << std::endl;
-
         std::wcout << L"0. Выход";
 
         std::cin >> choice;
@@ -44,8 +37,10 @@ bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
                 break;
             }
             case (1): {
-                auto result = clients_instance.read();
-                std::wcout << result << std::endl;
+                auto result = clients_instance.readAll();
+                for (int i = 0; i < result.size(); i++) {
+                    std::wcout << result[i] << std::endl;
+                }
 
                 break;
             }
@@ -54,18 +49,44 @@ bool menu(deposit_mapper &deposit_instance, employer_mapper &employer_instance,
                 std::wcout << L"--- Введите индентификатор ---" << std::endl;
                 std::cin >> choice_id;
                 auto result = clients_instance.read(choice_id);
-                std::wcout << result << std::endl;
+                for (int i = 0; i < result.size(); i++) {
+                    std::wcout << result[i] << std::endl;
+                }
                 break;
             }
             case (4): {
-                clients_instance.create({
-                                                .registry_number = 11,
-                                                .full_name = L"мужик",
-                                                .address = L"тестовый",
-                                                .gender = L"мужик",
-                                                .receipt_number = 2,
-                                        });
+                Client client;
+                std::wstring wstr;
+                int number;
 
+                std::wcout << "Enter name: ";
+                std::wcin.ignore();
+                std::getline(std::wcin, wstr);
+                client.setFullName(wstr);
+
+                std::wcout << "Enter registry number: ";
+                std::wcin.ignore();
+                std::cin >> number;
+                client.setRegistryNumber(number);
+
+                std::wcout << "Enter address: ";
+                std::wcin.ignore();
+                std::getline(std::wcin, wstr);
+                client.setAddress(wstr);
+
+                std::wcout << "Enter gender: ";
+                std::wcin.ignore();
+                std::getline(std::wcin, wstr);
+
+                client.setGender(wstr);
+
+                std::wcout << "Enter phone: ";
+                std::wcin.ignore();
+                std::getline(std::wcin, wstr);
+
+                client.setPhone(wstr);
+
+                clients_instance.create(client);
                 break;
             }
         }
@@ -90,11 +111,10 @@ int main(int argc, char **argv) {
 
         auto executor = sql_executor(connection_data);
 
-        auto deposit_mapper_instance = deposit_mapper(&executor);
         auto clients_mapper_instance = clients_mapper(&executor);
         auto employer_mapper_instance = employer_mapper(&executor);
 
-        menu(deposit_mapper_instance, employer_mapper_instance, clients_mapper_instance);
+        menu(employer_mapper_instance, clients_mapper_instance);
     }
         /* Connection catch */
     catch (const std::exception &ex) {
