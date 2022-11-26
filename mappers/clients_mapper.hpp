@@ -5,9 +5,9 @@
 #include "sql_executor.hpp"
 #include "entities/clients.hpp"
 
-class clients_mapper {
+class ClientsMapper {
 public:
-    explicit clients_mapper(sql_executor *executor)
+    explicit ClientsMapper(sql_executor *executor)
             : executor_(executor) {
         auto query =
                 "create table if not exists clients\n"
@@ -49,9 +49,6 @@ public:
 
         retcode = SQLFetch(statement);
 
-
-        std::wcout << id << std::endl;
-
         client_.setClientId(id);
     }
 
@@ -64,18 +61,18 @@ public:
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
-        return this->get_table(statement);
+        return ClientsMapper::get_table(statement);
     }
 
     std::vector<Client> readAll() {
         SQLHSTMT statement = executor_->execute("select * from clients");
 
-        return this->get_table(statement);
+        return ClientsMapper::get_table(statement);
     }
 
     void update(const Client &client_) {
         if (!client_.getClientId().has_value()) {
-            throw std::runtime_error("[clients_mapper]: record doesn't exists");
+            throw std::runtime_error("[ClientsMapper]: record doesn't exists");
         }
 
         std::wstringstream query_builder;
@@ -103,7 +100,7 @@ public:
 private:
     sql_executor *executor_;
 
-    std::vector<Client> get_table(SQLHSTMT statement) {
+    static std::vector<Client> get_table(SQLHSTMT statement) {
         std::vector<Client> buff;
 
         SQLINTEGER id;
@@ -138,9 +135,7 @@ private:
                     break;
                 }
             }
-
         }
-
 
         return buff;
     }

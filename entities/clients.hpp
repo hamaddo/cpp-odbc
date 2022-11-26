@@ -25,9 +25,7 @@ public:
         phone = L"";
     };
 
-    ~Client() {
-
-    };
+    ~Client() = default;
 
     const std::optional<int> &getClientId() const {
         return client_id;
@@ -41,40 +39,40 @@ public:
         return full_name;
     }
 
-    void setFullName(const std::wstring &fullName) {
-        full_name = fullName;
+    void setFullName(const std::wstring &fullName_) {
+        full_name = fullName_;
     }
 
     int getRegistryNumber() const {
         return registry_number;
     }
 
-    void setRegistryNumber(int registryNumber) {
-        registry_number = registryNumber;
+    void setRegistryNumber(int registryNumber_) {
+        registry_number = registryNumber_;
     }
 
     const std::wstring &getAddress() const {
         return address;
     }
 
-    void setAddress(const std::wstring &address) {
-        Client::address = address;
+    void setAddress(const std::wstring &address_) {
+        Client::address = address_;
     }
 
     const std::wstring &getGender() const {
         return gender;
     }
 
-    void setGender(const std::wstring &gender) {
-        Client::gender = gender;
+    void setGender(const std::wstring &gender_) {
+        Client::gender = gender_;
     }
 
     const std::wstring &getPhone() const {
         return phone;
     }
 
-    void setPhone(const std::wstring &phone) {
-        Client::phone = phone;
+    void setPhone(const std::wstring &phone_) {
+        Client::phone = phone_;
     }
 
     friend std::wostream &operator<<(std::wostream &out, Client &client_) {
