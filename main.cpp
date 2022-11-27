@@ -7,10 +7,10 @@
 
 
 bool menu(EmployerMapper &employer_instance,
-          ClientsMapper &client_instance) {
+          ClientsMapper &client_instance, RequestMapper &request_mapper_instance) {
     auto should_break = false;
 
-    auto client_helper = new ClientsHelper(client_instance);
+    auto client_helper = new ClientsHelper(client_instance, request_mapper_instance);
     auto employer_helper = new EmployerHelper(employer_instance);
 
     while (!should_break) {
@@ -18,9 +18,7 @@ bool menu(EmployerMapper &employer_instance,
 
         std::wcout << std::endl << L"--- Разделы ---" << std::endl
                    << L"1. Клиенты" << std::endl
-                   << L"2. Заявки" << std::endl
-                   << L"3. Работодатели" << std::endl
-                   << L"4. Предложения" << std::endl << std::endl;
+                   << L"3. Работодатели" << std::endl << std::endl;
 
         std::wcout << L"0. Выход" << std::endl;
 
@@ -36,19 +34,11 @@ bool menu(EmployerMapper &employer_instance,
                 client_helper->start();
                 break;
             }
-                //Заявки
-            case (2): {
-                break;
-            }
                 //Работодатели
-            case (3): {
+            case (2): {
                 employer_helper->start();
                 break;
 
-            }
-                //Предложения
-            case (4): {
-                break;
             }
             default: {
                 break;
@@ -76,8 +66,9 @@ int main(int argc, char **argv) {
 
         auto clients_mapper_instance = ClientsMapper(&executor);
         auto employer_mapper_instance = EmployerMapper(&executor);
+        auto request_mapper_instance = RequestMapper(&executor);
 
-        menu(employer_mapper_instance, clients_mapper_instance);
+        menu(employer_mapper_instance, clients_mapper_instance, request_mapper_instance);
     }
         /* Connection catch */
     catch (const std::exception &ex) {

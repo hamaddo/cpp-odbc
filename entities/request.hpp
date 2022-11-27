@@ -4,14 +4,14 @@
 
 #include <string>
 #include <optional>
+#include <ostream>
 
 class Request {
 private:
     std::optional<int> id;
+    int client_id;
     std::wstring position_name;
     int salary;
-
-    int client_id;
 
 public:
 
@@ -45,6 +45,12 @@ public:
 
     void setClientId(int clientId) {
         client_id = clientId;
+    }
+
+    friend std::wostream &operator<<(std::wostream &os, const Request *request) {
+        os << "client_id: " << request->client_id << " position_name: " << request->position_name << " salary: "
+           << request->salary;
+        return os;
     }
 
 };

@@ -41,10 +41,10 @@ public:
                     read();
                     break;
                 case 3:
-                    create();
+                    update();
                     break;
                 case 4:
-                    update();
+                    create();
                     break;
                 case 5:
                     remove();

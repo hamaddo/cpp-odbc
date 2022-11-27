@@ -5,12 +5,17 @@
 #include <iostream>
 #include "abstract_helper.hpp"
 #include "mappers/clients_mapper.hpp"
+#include "request_helper.hpp"
 
 class ClientsHelper : public AbstractHelper {
 private:
     ClientsMapper &mapper_instance;
+    RequestHelper* request_helper;
+
 public:
-    explicit ClientsHelper(ClientsMapper &mapper_instance_) : mapper_instance(mapper_instance_) {
+    explicit ClientsHelper(ClientsMapper &mapper_instance_, RequestMapper &childMapperInstance)
+            : mapper_instance(mapper_instance_) {
+        request_helper = new RequestHelper(childMapperInstance);
 
     }
 
@@ -54,7 +59,7 @@ public:
         client.setFullName(name);
 
         std::wcout << "Enter registry number: ";
-        std::cin >> number;
+        std::wcin >> number;
         client.setRegistryNumber(number);
 
         std::wcout << "Enter address: ";
@@ -89,7 +94,14 @@ public:
     }
 
     void goToChild() override {
+        int order;
+        std::wcin >> order;
+        auto result = mapper_instance.read(order - 1);
 
+        std::wcout << result << std::endl;
+
+        request_helper->setClientId(result->getClientId().value());
+        request_helper->start();
     }
 
 };
