@@ -53,6 +53,7 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // Создать нового клиента
             case (4): {
                 Client client;
                 std::wstring name;
@@ -84,6 +85,7 @@ bool menu(EmployerMapper &employer_instance,
                 client_instance.create(client);
                 break;
             }
+                // Удалить клиента по порядковому номеру
             case (5): {
                 int order;
                 std::wcin >> order;
@@ -97,6 +99,7 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // Показать всех работодателей
             case (6): {
                 auto result = employer_instance.readAll();
                 for (auto item: result) {
@@ -105,6 +108,7 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // Прочитать по порядковому номеру
             case (7): {
                 int order;
                 std::wcin >> order;
@@ -113,6 +117,7 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // TODO Обновить работодателя
             case (8): {
                 auto result = employer_instance.readAll();
                 for (auto &item: result) {
@@ -121,6 +126,7 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // Добавить нового работодателя
             case (9): {
                 Employer employer;
                 std::wstring name;
@@ -152,6 +158,20 @@ bool menu(EmployerMapper &employer_instance,
                 employer.setContractNumber(number);
 
                 employer_instance.create(employer);
+                break;
+            }
+                // Удалить работодателя по порядковому номеру
+            case (10): {
+                int order;
+                std::wcin >> order;
+
+                auto result = employer_instance.remove(order - 1);
+
+                int position = 1;
+                for (auto i: result) {
+                    std::wcout << position++ << L". " << i << std::endl;
+                }
+
                 break;
             }
             default: {

@@ -84,14 +84,23 @@ public:
         SQLHSTMT statement = executor_->execute(query_builder.str());
     }
 
-    void remove(int id_) {
+    std::vector<Employer *> remove(int order) {
+        if (order > employers_.size()) {
+            throw std::runtime_error("[ClientsMapper]: out of bounds");
+        }
         std::stringstream query_builder;
 
         query_builder <<
-                      "delete from employers" << std::endl <<
-                      "where id = " << id_ << std::endl <<
-                      "returning *";
+                      "delete from clients" << std::endl <<
+                      "where id = " << employers_[order]->getId().value() << std::endl <<
+                      "returning id";
+
         SQLHSTMT statement = executor_->execute(query_builder.str());
+
+        delete employers_[order];
+        employers_.erase(employers_.begin() + order);
+
+        return this->readAll();
     }
 
 private:
