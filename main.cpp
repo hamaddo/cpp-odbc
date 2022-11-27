@@ -5,7 +5,7 @@
 
 
 bool menu(EmployerMapper &employer_instance,
-          ClientsMapper &clients_instance) {
+          ClientsMapper &client_instance) {
     auto should_break = false;
 
     while (!should_break) {
@@ -36,9 +36,10 @@ bool menu(EmployerMapper &employer_instance,
             }
                 // Показать всех клиентов
             case (1): {
-                auto result = clients_instance.readAll();
+                auto result = client_instance.readAll();
+                int position = 1;
                 for (auto i: result) {
-                    std::wcout << i << std::endl;
+                    std::wcout << position++ << L". " << i << std::endl;
                 }
 
                 break;
@@ -47,7 +48,7 @@ bool menu(EmployerMapper &employer_instance,
             case (2): {
                 int order;
                 std::wcin >> order;
-                auto result = clients_instance.read(order - 1);
+                auto result = client_instance.read(order - 1);
                 std::wcout << result << std::endl;
 
                 break;
@@ -80,13 +81,18 @@ bool menu(EmployerMapper &employer_instance,
                 std::wcin >> phone;
                 client.setPhone(phone);
 
-                clients_instance.create(client);
+                client_instance.create(client);
                 break;
             }
             case (5): {
-                auto result = clients_instance.readAll();
-                for (auto item: result) {
-                    std::wcout << item << std::endl;
+                int order;
+                std::wcin >> order;
+
+                auto result = client_instance.remove(order - 1);
+
+                int position = 1;
+                for (auto i: result) {
+                    std::wcout << position++ << L". " << i << std::endl;
                 }
 
                 break;
