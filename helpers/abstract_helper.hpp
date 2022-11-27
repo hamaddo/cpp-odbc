@@ -16,6 +16,8 @@ public:
 
     virtual void remove() = 0;
 
+    virtual void goToChild() = 0;
+
     virtual void printActions() = 0;
 
     void start() {
@@ -46,6 +48,9 @@ public:
                     break;
                 case 5:
                     remove();
+                    break;
+                case 6:
+                    goToChild();
                     break;
                 default:
                     std::cout << "Back to main menu..." << std::endl;

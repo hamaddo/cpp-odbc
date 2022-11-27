@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <utility>
+#include "offer.hpp"
 
 class Employer {
 private:
@@ -12,6 +13,8 @@ private:
     std::wstring address;
     std::wstring phone;
     int contractNumber;
+
+    std::vector<Offer *> offers;
 public:
     const std::optional<int> &getId() const {
         return id;

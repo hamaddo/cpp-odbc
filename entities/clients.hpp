@@ -4,7 +4,7 @@
 #include <optional>
 #include <sqlext.h>
 #include <ostream>
-
+#include "request.hpp"
 
 class Client {
 private:
@@ -14,7 +14,7 @@ private:
     std::wstring address;
     std::wstring gender;
     std::wstring phone;
-
+    std::vector<Request *> requests;
 public:
     const std::optional<int> &getClientId() const {
         return client_id;
