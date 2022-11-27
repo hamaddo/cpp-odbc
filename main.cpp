@@ -2,30 +2,27 @@
 #include "sql_executor.hpp"
 #include "mappers/employer_mapper.hpp"
 #include "mappers/clients_mapper.hpp"
+#include "helpers/clients_helper.hpp"
+#include "helpers/employer_helper.hpp"
 
 
 bool menu(EmployerMapper &employer_instance,
           ClientsMapper &client_instance) {
     auto should_break = false;
 
+    auto client_helper = new ClientsHelper(client_instance);
+    auto employer_helper = new EmployerHelper(employer_instance);
+
     while (!should_break) {
         int choice;
 
-        std::wcout << L"--- Клиенты ---" << std::endl
-                   << L"1. Показать всех клиентов" << std::endl
-                   << L"2. Найти клиента по порядковому номеру" << std::endl
-                   << L"3. Изменить данные клиента" << std::endl
-                   << L"4. Создать клиента" << std::endl
-                   << L"5. Удалить клиента" << std::endl << std::endl;
+        std::wcout << std::endl << L"--- Разделы ---" << std::endl
+                   << L"1. Клиенты" << std::endl
+                   << L"2. Заявки" << std::endl
+                   << L"3. Работодатели" << std::endl
+                   << L"4. Предложения" << std::endl << std::endl;
 
-        std::wcout << L"--- Работодатели ---" << std::endl
-                   << L"6. Показать всех работодателей" << std::endl
-                   << L"7. Найти работодателя по порядковому номеру" << std::endl
-                   << L"8. Изменить данные работодателя" << std::endl
-                   << L"9. Создать работодателя" << std::endl
-                   << L"10.Удалить работодателя" << std::endl << std::endl;
-
-        std::wcout << L"0. Выход";
+        std::wcout << L"0. Выход" << std::endl;
 
         std::wcin >> choice;
 
@@ -34,144 +31,23 @@ bool menu(EmployerMapper &employer_instance,
                 should_break = true;
                 break;
             }
-                // Показать всех клиентов
+                // Клиенты
             case (1): {
-                auto result = client_instance.readAll();
-                int position = 1;
-                for (auto i: result) {
-                    std::wcout << position++ << L". " << i << std::endl;
-                }
-
+                client_helper->start();
                 break;
             }
-                // Найти клиента по порядковому номеру
+                //Заявки
             case (2): {
-                int order;
-                std::wcin >> order;
-                auto result = client_instance.read(order - 1);
-                std::wcout << result << std::endl;
-
                 break;
             }
-                // Создать нового клиента
+                //Работодатели
+            case (3): {
+                employer_helper->start();
+                break;
+
+            }
+                //Предложения
             case (4): {
-                Client client;
-                std::wstring name;
-                std::wstring address;
-                std::wstring gender;
-                std::wstring phone;
-                int number;
-
-                std::wcout << "Enter name: ";
-                std::getline(std::wcin >> std::ws, name);
-                client.setFullName(name);
-
-                std::wcout << "Enter registry number: ";
-                std::cin >> number;
-                client.setRegistryNumber(number);
-
-                std::wcout << "Enter address: ";
-                std::getline(std::wcin >> std::ws, address);
-                client.setAddress(address);
-
-                std::wcout << "Enter gender: ";
-                std::wcin >> gender;
-                client.setGender(gender);
-
-                std::wcout << "Enter phone: ";
-                std::wcin >> phone;
-                client.setPhone(phone);
-
-                client_instance.create(client);
-                break;
-            }
-                // Удалить клиента по порядковому номеру
-            case (5): {
-                int order;
-                std::wcin >> order;
-
-                auto result = client_instance.remove(order - 1);
-
-                int position = 1;
-                for (auto i: result) {
-                    std::wcout << position++ << L". " << i << std::endl;
-                }
-
-                break;
-            }
-                // Показать всех работодателей
-            case (6): {
-                auto result = employer_instance.readAll();
-                for (auto item: result) {
-                    std::wcout << item << std::endl;
-                }
-
-                break;
-            }
-                // Прочитать по порядковому номеру
-            case (7): {
-                int order;
-                std::wcin >> order;
-                auto result = employer_instance.read(order - 1);
-                std::wcout << result << std::endl;
-
-                break;
-            }
-                // TODO Обновить работодателя
-            case (8): {
-                auto result = employer_instance.readAll();
-                for (auto &item: result) {
-                    std::wcout << item << std::endl;
-                }
-
-                break;
-            }
-                // Добавить нового работодателя
-            case (9): {
-                Employer employer;
-                std::wstring name;
-                std::wstring ownership_type;
-                std::wstring address;
-                std::wstring phone;
-
-                int number;
-
-                std::wcout << "Enter name: " << std::endl;
-                std::getline(std::wcin >> std::ws, name);
-                employer.setName(name);
-
-                std::wcout << "Enter ownership type: " << std::endl;
-                std::wcin >> ownership_type;
-                employer.setOwnershipType(ownership_type);
-
-                std::wcout << "Enter address: " << std::endl;
-                std::getline(std::wcin >> std::ws, address);
-                employer.setAddress(address);
-
-                std::wcout << "Enter phone: " << std::endl;
-                std::wcin >> phone;
-                employer.setPhone(phone);
-
-
-                std::wcout << "Enter contract number: " << std::endl;
-                std::wcin >> number;
-                employer.setContractNumber(number);
-
-                employer_instance.create(employer);
-                break;
-            }
-                // Удалить работодателя по порядковому номеру
-            case (10): {
-                int order;
-                std::wcin >> order;
-
-                auto result = employer_instance.remove(order - 1);
-
-                int position = 1;
-                for (auto i: result) {
-                    std::wcout << position++ << L". " << i << std::endl;
-                }
-
                 break;
             }
             default: {
@@ -179,8 +55,6 @@ bool menu(EmployerMapper &employer_instance,
             }
         }
     }
-
-    return true;
 }
 
 int main(int argc, char **argv) {
