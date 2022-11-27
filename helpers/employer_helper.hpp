@@ -4,13 +4,17 @@
 #include <iostream>
 #include "abstract_helper.hpp"
 #include "mappers/employer_mapper.hpp"
+#include "offer_helper.hpp"
 
 class EmployerHelper : public AbstractHelper {
 private:
     EmployerMapper &mapper_instance;
-public:
-    explicit EmployerHelper(EmployerMapper &mapper_instance_) : mapper_instance(mapper_instance_) {
+    OfferHelper *offer_helper;
 
+public:
+    explicit EmployerHelper(EmployerMapper &mapper_instance_, OfferMapper &childMapperInstance) : mapper_instance(
+            mapper_instance_) {
+        offer_helper = new OfferHelper(childMapperInstance);
     }
 
     void printActions() override {
@@ -19,7 +23,8 @@ public:
                    << L"2. Найти работодателя по порядковому номеру" << std::endl
                    << L"3. Изменить данные работодателя" << std::endl
                    << L"4. Создать работодателя" << std::endl
-                   << L"5. Удалить работодателя" << std::endl << std::endl;
+                   << L"5. Удалить работодателя" << std::endl
+                   << L"6. Перейти к предложениям работодателя по порядковому номеру" << std::endl << std::endl;
 
         std::wcout << L"0. Выход" << std::endl;
     }
@@ -89,7 +94,14 @@ public:
     }
 
     void goToChild() override {
+        int order;
+        std::wcin >> order;
+        auto result = mapper_instance.read(order - 1);
 
+        std::wcout << result << std::endl;
+
+        offer_helper->setEmployerId(result->getId().value());
+        offer_helper->start();
     }
 
 };

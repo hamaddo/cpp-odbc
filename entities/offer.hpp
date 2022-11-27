@@ -9,6 +9,7 @@ class Offer {
 
 private:
     std::optional<int> id;
+    int employer_id;
     std::wstring position_name;
     int salary;
     std::wstring gender;
@@ -46,6 +47,20 @@ public:
         gender = _gender;
     }
 
+    int getEmployerId() const {
+        return employer_id;
+    }
+
+    void setEmployerId(int employerId) {
+        employer_id = employerId;
+    }
+
+    friend std::wostream &operator<<(std::wostream &os, const Offer *offer) {
+        os << L"Позиция: " << offer->getPositionName() << std::endl
+           << L"Зарплата: " << offer->getSalary() << std::endl
+           << L"Гендер: " << offer->getGender() << std::endl;
+        return os;
+    }
 
 };
 

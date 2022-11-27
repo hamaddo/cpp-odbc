@@ -48,8 +48,8 @@ public:
     }
 
     friend std::wostream &operator<<(std::wostream &os, const Request *request) {
-        os << "client_id: " << request->client_id << " position_name: " << request->position_name << " salary: "
-           << request->salary;
+        os << L"Позиция: " << request->getPositionName() << std::endl
+           << L"Зарплата: " << request->getSalary() << std::endl;
         return os;
     }
 

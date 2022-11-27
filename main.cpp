@@ -7,11 +7,11 @@
 
 
 bool menu(EmployerMapper &employer_instance,
-          ClientsMapper &client_instance, RequestMapper &request_mapper_instance) {
+          ClientsMapper &client_instance, RequestMapper &request_mapper_instance, OfferMapper &offer_mapper_instance) {
     auto should_break = false;
 
     auto client_helper = new ClientsHelper(client_instance, request_mapper_instance);
-    auto employer_helper = new EmployerHelper(employer_instance);
+    auto employer_helper = new EmployerHelper(employer_instance, offer_mapper_instance);
 
     while (!should_break) {
         int choice;
@@ -67,8 +67,9 @@ int main(int argc, char **argv) {
         auto clients_mapper_instance = ClientsMapper(&executor);
         auto employer_mapper_instance = EmployerMapper(&executor);
         auto request_mapper_instance = RequestMapper(&executor);
+        auto offer_mapper_instance = OfferMapper(&executor);
 
-        menu(employer_mapper_instance, clients_mapper_instance, request_mapper_instance);
+        menu(employer_mapper_instance, clients_mapper_instance, request_mapper_instance, offer_mapper_instance);
     }
         /* Connection catch */
     catch (const std::exception &ex) {
