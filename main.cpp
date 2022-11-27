@@ -34,6 +34,7 @@ bool menu(EmployerMapper &employer_instance,
                 should_break = true;
                 break;
             }
+                // Показать всех клиентов
             case (1): {
                 auto result = clients_instance.readAll();
                 for (auto i: result) {
@@ -42,13 +43,13 @@ bool menu(EmployerMapper &employer_instance,
 
                 break;
             }
+                // Найти клиента по порядковому номеру
             case (2): {
                 int order;
                 std::wcin >> order;
                 auto result = clients_instance.read(order - 1);
-                for (auto &i: result) {
-                    std::wcout << i << std::endl;
-                }
+                std::wcout << result << std::endl;
+
                 break;
             }
             case (4): {
@@ -99,10 +100,10 @@ bool menu(EmployerMapper &employer_instance,
                 break;
             }
             case (7): {
-                auto result = employer_instance.readAll();
-                for (auto item: result) {
-                    std::wcout << item << std::endl;
-                }
+                int order;
+                std::wcin >> order;
+                auto result = employer_instance.read(order - 1);
+                std::wcout << result << std::endl;
 
                 break;
             }

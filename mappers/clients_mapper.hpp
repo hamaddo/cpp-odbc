@@ -52,16 +52,12 @@ public:
         client_.setClientId(id);
     }
 
-    std::vector<Client *> read(int id_) {
-        std::stringstream query_builder;
+    Client *read(int order) {
+        if (order > clients_.size()) {
+            throw std::runtime_error("[client_mapper]: out of bounds");
+        }
 
-        query_builder <<
-                      "select * from clients" << std::endl <<
-                      "where id = " << id_;
-
-        SQLHSTMT statement = executor_->execute(query_builder.str());
-
-        return this->get_table(statement);
+        return clients_[order];
     }
 
     std::vector<Client *> readAll() {

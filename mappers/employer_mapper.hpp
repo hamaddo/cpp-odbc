@@ -49,19 +49,15 @@ public:
         employer_.setId(id);
     }
 
-    std::vector<Employer*> read(int id_) {
-        std::stringstream query_builder;
+    Employer *read(int order) {
+        if (order > employers_.size()) {
+            throw std::runtime_error("[client_mapper]: out of bounds");
+        }
 
-        query_builder <<
-                      "select * from employers" << std::endl <<
-                      "where id = " << id_;
-
-        SQLHSTMT statement = executor_->execute(query_builder.str());
-
-        return this->get_table(statement);
+        return employers_[order];
     }
 
-    std::vector<Employer*> readAll() {
+    std::vector<Employer *> readAll() {
         SQLHSTMT statement = executor_->execute("select * from clients");
 
         return this->get_table(statement);
