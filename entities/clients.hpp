@@ -65,9 +65,11 @@ public:
     }
 
     friend std::wostream &operator<<(std::wostream &out, Client *client_) {
-        out << client_->full_name << ' ' << client_->address << ' ' << client_->phone << ' ' << client_->gender
-            << ' '
-            << client_->registry_number;
+
+        out << L"ФИО: " << client_->full_name << std::endl
+            << L"Адрес: " << client_->address << std::endl
+            << L"Телефон:  " << client_->phone << std::endl
+            << L"Гендер: " << client_->gender << std::endl;
 
         return out;
     }

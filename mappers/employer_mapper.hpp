@@ -51,14 +51,14 @@ public:
 
     Employer *read(int order) {
         if (order > employers_.size()) {
-            throw std::runtime_error("[client_mapper]: out of bounds");
+            throw std::runtime_error("[EmployerMapper]: out of bounds");
         }
 
         return employers_[order];
     }
 
     std::vector<Employer *> readAll() {
-        SQLHSTMT statement = executor_->execute("select * from clients");
+        SQLHSTMT statement = executor_->execute("select * from employers");
 
         return this->get_table(statement);
     }
@@ -86,12 +86,12 @@ public:
 
     std::vector<Employer *> remove(int order) {
         if (order > employers_.size()) {
-            throw std::runtime_error("[ClientsMapper]: out of bounds");
+            throw std::runtime_error("[EmployerMapper]: out of bounds");
         }
         std::stringstream query_builder;
 
         query_builder <<
-                      "delete from clients" << std::endl <<
+                      "delete from employers" << std::endl <<
                       "where id = " << employers_[order]->getId().value() << std::endl <<
                       "returning id";
 
@@ -121,10 +121,6 @@ private:
         retcode = SQLBindCol(statement, 4, SQL_C_WCHAR, &address, 255, nullptr);
         retcode = SQLBindCol(statement, 5, SQL_C_WCHAR, &phone, 255, nullptr);
         retcode = SQLBindCol(statement, 6, SQL_C_LONG, &contract_number, 255, nullptr);
-
-        retcode = SQLFetch(statement);
-
-        std::vector<Employer> buff = {};
 
         while (true) {
             retcode = SQLFetch(statement);

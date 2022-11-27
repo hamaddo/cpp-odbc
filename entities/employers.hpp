@@ -65,9 +65,11 @@ public:
     }
 
     friend std::wostream &operator<<(std::wostream &os, Employer *employer) {
-        os << " name: " << employer->name << " ownership_type: " << employer->ownership_type
-           << " address: " << employer->address << " phone: " << employer->phone << " contractNumber: "
-           << employer->contractNumber;
+        os << L"Название компании: " << employer->name << std::endl
+           << L"Тип собственности: " << employer->ownership_type << std::endl
+           << L"Адрес: " << employer->address << std::endl
+           << L"Телефон:  " << employer->phone << std::endl
+           << L"Номер договора: " << employer->contractNumber << std::endl;
         return os;
     }
 

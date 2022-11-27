@@ -18,7 +18,7 @@ bool menu(EmployerMapper &employer_instance,
 
         std::wcout << std::endl << L"--- Разделы ---" << std::endl
                    << L"1. Клиенты" << std::endl
-                   << L"3. Работодатели" << std::endl << std::endl;
+                   << L"2. Работодатели" << std::endl << std::endl;
 
         std::wcout << L"0. Выход" << std::endl;
 

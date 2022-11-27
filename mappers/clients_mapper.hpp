@@ -45,7 +45,7 @@ public:
 
         SQLINTEGER id;
 
-        auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 0, nullptr);
+        auto retcode = SQLBindCol(statement, 1, SQL_C_LONG, &id, 255, nullptr);
 
         retcode = SQLFetch(statement);
 
@@ -118,7 +118,7 @@ private:
         retcode = SQLBindCol(statement, 3, SQL_C_WCHAR, &address, 255, nullptr);
         retcode = SQLBindCol(statement, 4, SQL_C_WCHAR, &full_name, 255, nullptr);
         retcode = SQLBindCol(statement, 5, SQL_C_WCHAR, &gender, 255, nullptr);
-        retcode = SQLBindCol(statement, 6, SQL_C_LONG, &phone, 0, nullptr);
+        retcode = SQLBindCol(statement, 6, SQL_C_WCHAR, &phone, 255, nullptr);
 
 
         while (true) {

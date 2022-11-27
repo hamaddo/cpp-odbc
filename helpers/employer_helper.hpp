@@ -19,7 +19,7 @@ public:
                    << L"2. Найти работодателя по порядковому номеру" << std::endl
                    << L"3. Изменить данные работодателя" << std::endl
                    << L"4. Создать работодателя" << std::endl
-                   << L"5.Удалить работодателя" << std::endl << std::endl;
+                   << L"5. Удалить работодателя" << std::endl << std::endl;
 
         std::wcout << L"0. Выход" << std::endl;
     }
@@ -48,7 +48,7 @@ public:
 
         int number;
 
-        std::wcout << "Enter name: " << std::endl;
+        std::wcout << "Enter company name: " << std::endl;
         std::getline(std::wcin >> std::ws, name);
         employer.setName(name);
 
