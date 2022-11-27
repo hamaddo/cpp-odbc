@@ -88,6 +88,10 @@ public:
     void update() override {
     }
 
+    void goToChild() override {
+
+    }
+
 };
 
 

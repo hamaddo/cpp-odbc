@@ -11,6 +11,8 @@ private:
     std::wstring position_name;
     int salary;
 
+    int client_id;
+
 public:
 
     const std::wstring &getPositionName() const {
@@ -35,6 +37,14 @@ public:
 
     void setId(const std::optional<int> &id) {
         Request::id = id;
+    }
+
+    int getClientId() const {
+        return client_id;
+    }
+
+    void setClientId(int clientId) {
+        client_id = clientId;
     }
 
 };
