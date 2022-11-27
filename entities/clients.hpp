@@ -16,17 +16,6 @@ private:
     std::wstring phone;
 
 public:
-    Client() {
-        client_id = -1;
-        full_name = L"";
-        registry_number = 0;
-        address = L"";
-        gender = L"";
-        phone = L"";
-    };
-
-    ~Client() = default;
-
     const std::optional<int> &getClientId() const {
         return client_id;
     }
@@ -75,13 +64,13 @@ public:
         Client::phone = phone_;
     }
 
-    friend std::wostream &operator<<(std::wostream &out, Client &client_) {
+    friend std::wostream &operator<<(std::wostream &out, Client *client_) {
 
-        out << client_.client_id.value() << ' ';
+        out << client_->client_id.value() << ' ';
 
-        out << client_.full_name << ' ' << client_.address << ' ' << client_.phone << ' ' << client_.gender
+        out << client_->full_name << ' ' << client_->address << ' ' << client_->phone << ' ' << client_->gender
             << ' '
-            << client_.registry_number;
+            << client_->registry_number;
 
         return out;
     }

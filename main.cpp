@@ -9,7 +9,7 @@ bool menu(EmployerMapper &employer_instance,
     auto should_break = false;
 
     while (!should_break) {
-        int choice = -1;
+        int choice;
 
         std::wcout << L"--- Клиенты ---" << std::endl
                    << L"1. Показать всех клиентов" << std::endl
@@ -27,30 +27,25 @@ bool menu(EmployerMapper &employer_instance,
 
         std::wcout << L"0. Выход";
 
-        std::cin >> choice;
-
-        std::wcout << std::endl;
-
+        std::wcin >> choice;
 
         switch (choice) {
             case (0) : {
                 should_break = true;
-
                 break;
             }
             case (1): {
                 auto result = clients_instance.readAll();
-                for (auto &i: result) {
+                for (auto i: result) {
                     std::wcout << i << std::endl;
                 }
 
                 break;
             }
             case (2): {
-                int choice_id = -1;
-                std::wcout << L"--- Введите порядковый номер ---" << std::endl;
-                std::cin >> choice_id;
-                auto result = clients_instance.read(choice_id);
+                int order;
+                std::wcin >> order;
+                auto result = clients_instance.read(order - 1);
                 for (auto &i: result) {
                     std::wcout << i << std::endl;
                 }
@@ -58,42 +53,38 @@ bool menu(EmployerMapper &employer_instance,
             }
             case (4): {
                 Client client;
-                std::wstring wstr;
+                std::wstring name;
+                std::wstring address;
+                std::wstring gender;
+                std::wstring phone;
                 int number;
 
                 std::wcout << "Enter name: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-                client.setFullName(wstr);
+                std::getline(std::wcin >> std::ws, name);
+                client.setFullName(name);
 
                 std::wcout << "Enter registry number: ";
-                std::wcin.ignore();
                 std::cin >> number;
                 client.setRegistryNumber(number);
 
                 std::wcout << "Enter address: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-                client.setAddress(wstr);
+                std::getline(std::wcin >> std::ws, address);
+                client.setAddress(address);
 
                 std::wcout << "Enter gender: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-
-                client.setGender(wstr);
+                std::wcin >> gender;
+                client.setGender(gender);
 
                 std::wcout << "Enter phone: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-
-                client.setPhone(wstr);
+                std::wcin >> phone;
+                client.setPhone(phone);
 
                 clients_instance.create(client);
                 break;
             }
             case (5): {
                 auto result = clients_instance.readAll();
-                for (auto &item: result) {
+                for (auto item: result) {
                     std::wcout << item << std::endl;
                 }
 
@@ -101,7 +92,7 @@ bool menu(EmployerMapper &employer_instance,
             }
             case (6): {
                 auto result = employer_instance.readAll();
-                for (auto &item: result) {
+                for (auto item: result) {
                     std::wcout << item << std::endl;
                 }
 
@@ -109,7 +100,7 @@ bool menu(EmployerMapper &employer_instance,
             }
             case (7): {
                 auto result = employer_instance.readAll();
-                for (auto &item: result) {
+                for (auto item: result) {
                     std::wcout << item << std::endl;
                 }
 
@@ -125,36 +116,38 @@ bool menu(EmployerMapper &employer_instance,
             }
             case (9): {
                 Employer employer;
-                std::wstring wstr;
+                std::wstring name;
+                std::wstring ownership_type;
+                std::wstring address;
+                std::wstring phone;
+
                 int number;
 
-                std::wcout << "Enter name: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-                employer.setName(wstr);
+                std::wcout << "Enter name: " << std::endl;
+                std::getline(std::wcin >> std::ws, name);
+                employer.setName(name);
 
-                std::wcout << "Enter ownership type: ";
-                std::wcin.ignore();
-                std::wcin >> wstr;
-                employer.setOwnershipType(wstr);
+                std::wcout << "Enter ownership type: " << std::endl;
+                std::wcin >> ownership_type;
+                employer.setOwnershipType(ownership_type);
 
-                std::wcout << "Enter address: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-                employer.setAddress(wstr);
+                std::wcout << "Enter address: " << std::endl;
+                std::getline(std::wcin >> std::ws, address);
+                employer.setAddress(address);
 
-                std::wcout << "Enter phone: ";
-                std::wcin.ignore();
-                std::getline(std::wcin, wstr);
-                employer.setPhone(wstr);
+                std::wcout << "Enter phone: " << std::endl;
+                std::wcin >> phone;
+                employer.setPhone(phone);
 
 
-                std::wcout << "Enter contract number: ";
-                std::wcin.ignore();
-                std::cin >> number;
+                std::wcout << "Enter contract number: " << std::endl;
+                std::wcin >> number;
                 employer.setContractNumber(number);
 
                 employer_instance.create(employer);
+                break;
+            }
+            default: {
                 break;
             }
         }

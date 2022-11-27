@@ -13,8 +13,6 @@ private:
     std::wstring phone;
     int contractNumber;
 public:
-    ~Employer() = default;
-
     const std::optional<int> &getId() const {
         return id;
     }
@@ -63,10 +61,10 @@ public:
         Employer::contractNumber = contractNumber_;
     }
 
-    friend std::wostream &operator<<(std::wostream &os, Employer &employer) {
-        os << " name: " << employer.name << " ownership_type: " << employer.ownership_type
-           << " address: " << employer.address << " phone: " << employer.phone << " contractNumber: "
-           << employer.contractNumber;
+    friend std::wostream &operator<<(std::wostream &os, Employer *employer) {
+        os << " name: " << employer->name << " ownership_type: " << employer->ownership_type
+           << " address: " << employer->address << " phone: " << employer->phone << " contractNumber: "
+           << employer->contractNumber;
         return os;
     }
 

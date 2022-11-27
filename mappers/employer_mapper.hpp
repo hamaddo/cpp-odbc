@@ -49,7 +49,7 @@ public:
         employer_.setId(id);
     }
 
-    std::vector<Employer> read(int id_) {
+    std::vector<Employer*> read(int id_) {
         std::stringstream query_builder;
 
         query_builder <<
@@ -58,13 +58,13 @@ public:
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
-        return EmployerMapper::get_table(statement);
+        return this->get_table(statement);
     }
 
-    std::vector<Employer> readAll() {
+    std::vector<Employer*> readAll() {
         SQLHSTMT statement = executor_->execute("select * from clients");
 
-        return EmployerMapper::get_table(statement);
+        return this->get_table(statement);
     }
 
     void update(Employer &employer_) {
@@ -100,8 +100,9 @@ public:
 
 private:
     sql_executor *executor_;
+    std::vector<Employer *> employers_;
 
-    static std::vector<Employer> get_table(SQLHSTMT statement) {
+    std::vector<Employer *> get_table(SQLHSTMT statement) {
         SQLINTEGER id;
         SQLWCHAR name[255];
         SQLWCHAR ownership_type[255];
@@ -123,15 +124,35 @@ private:
         while (true) {
             retcode = SQLFetch(statement);
             if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-                Employer employer;
+                auto new_employer = new Employer();
 
-                employer.setId(id);
-                employer.setName(name);
-                employer.setOwnershipType(ownership_type);
-                employer.setAddress(address);
-                employer.setPhone(phone);
-                employer.setContractNumber(contract_number);
-                buff.push_back(employer);
+                new_employer->setId(id);
+                new_employer->setName(name);
+                new_employer->setOwnershipType(ownership_type);
+                new_employer->setAddress(address);
+                new_employer->setPhone(phone);
+                new_employer->setContractNumber(contract_number);
+
+                bool found = false;
+                for (auto employer_: employers_) {
+                    if (employer_->getId().value() == new_employer->getId().value()) {
+                        employer_->setId(id);
+                        employer_->setName(name);
+                        employer_->setOwnershipType(ownership_type);
+                        employer_->setAddress(address);
+                        employer_->setPhone(phone);
+                        employer_->setContractNumber(contract_number);
+                        found = true;
+
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    employers_.push_back(new_employer);
+                } else {
+                    delete new_employer;
+                }
             } else {
                 if (retcode == SQL_NO_DATA) {
                     break;
@@ -139,7 +160,7 @@ private:
             }
         }
 
-        return buff;
+        return employers_;
     }
 };
 

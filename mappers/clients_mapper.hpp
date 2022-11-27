@@ -52,7 +52,7 @@ public:
         client_.setClientId(id);
     }
 
-    std::vector<Client> read(int id_) {
+    std::vector<Client *> read(int id_) {
         std::stringstream query_builder;
 
         query_builder <<
@@ -61,13 +61,13 @@ public:
 
         SQLHSTMT statement = executor_->execute(query_builder.str());
 
-        return ClientsMapper::get_table(statement);
+        return this->get_table(statement);
     }
 
-    std::vector<Client> readAll() {
+    std::vector<Client *> readAll() {
         SQLHSTMT statement = executor_->execute("select * from clients");
 
-        return ClientsMapper::get_table(statement);
+        return this->get_table(statement);
     }
 
     void update(const Client &client_) {
@@ -99,10 +99,9 @@ public:
 
 private:
     sql_executor *executor_;
+    std::vector<Client *> clients_;
 
-    static std::vector<Client> get_table(SQLHSTMT statement) {
-        std::vector<Client> buff;
-
+    std::vector<Client *> get_table(SQLHSTMT statement) {
         SQLINTEGER id;
         SQLINTEGER registry_number;
         SQLWCHAR full_name[255];
@@ -121,15 +120,34 @@ private:
         while (true) {
             retcode = SQLFetch(statement);
             if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-                Client client;
-                client.setClientId(id);
-                client.setRegistryNumber(registry_number);
-                client.setFullName(full_name);
-                client.setAddress(address);
-                client.setGender(gender);
-                client.setPhone(phone);
+                auto new_client = new Client();
+                new_client->setClientId(id);
+                new_client->setRegistryNumber(registry_number);
+                new_client->setFullName(full_name);
+                new_client->setAddress(address);
+                new_client->setGender(gender);
+                new_client->setPhone(phone);
 
-                buff.push_back(client);
+                bool found = false;
+                for (auto client_: clients_) {
+                    if (client_->getClientId().value() == new_client->getClientId().value()) {
+                        client_->setClientId(id);
+                        client_->setRegistryNumber(registry_number);
+                        client_->setFullName(full_name);
+                        client_->setAddress(address);
+                        client_->setGender(gender);
+                        client_->setPhone(phone);
+                        found = true;
+
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    clients_.push_back(new_client);
+                } else {
+                    delete new_client;
+                }
             } else {
                 if (retcode == SQL_NO_DATA) {
                     break;
@@ -137,7 +155,7 @@ private:
             }
         }
 
-        return buff;
+        return clients_;
     }
 };
 
